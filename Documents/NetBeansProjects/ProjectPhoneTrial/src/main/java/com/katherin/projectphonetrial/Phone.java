@@ -9,11 +9,11 @@ package com.katherin.projectphonetrial;
  * @author Katherin
  */
 public interface Phone {
-    int MAX_VOLUME = 100;
-    int MIN_VOLUME = 0;
-
-    void powerOn();
-    void powerOff();
-    void volumeUp();
-    void volumeDown();
+    int MaxVolume = 100;
+    int MinVolume = 0;
+    
+    void PowerOn();
+    void PowerOff();
+    void VolumeUp();
+    void VolumeDown();
 }

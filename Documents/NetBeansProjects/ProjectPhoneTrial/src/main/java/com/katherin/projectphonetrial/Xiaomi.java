@@ -9,31 +9,46 @@ package com.katherin.projectphonetrial;
  * @author Katherin
  */
 public class Xiaomi implements Phone {
-   private int volume;
-    private boolean IspowerOn;
+    private int volume;
+    private boolean isPowerOn;
+    
     public Xiaomi(){
-    this.volume = 25;
+        this.volume = 50;
     }
-    @Override
-    public void powerOn(){
-        IspowerOn = true;
-        System.out.println("selamat datang");
+    public void PowerOn(){
+        isPowerOn = true;
+        System.out.println("SELAMAT DATANG");
     }
-    @Override
-    public void powerOff(){
-        IspowerOn = false;
-        System.out.println("selamat tinggal");
+    public void PowerOff(){
+        isPowerOn = false;
+        System.out.println("SAMPAI JUMPA");
     }
-    @Override
-    public void volumeUp(){
-        if (IspowerOn){
-            if (this.volume == MAX_VOLUME){
-                System.out.println("volume sudah full");
-  } else{
+    public int getVolume(){
+        return this.volume;
+    }
+    public void VolumeUp(){
+        if (isPowerOn){
+            if(this.volume == MaxVolume){
+                System.out.println("Volume "+getVolume()+"%");
+            }
+            else{
                 this.volume += 10;
-                System.out.println("volume sekarang " + this.getvolume());
+                System.out.println("Volume "+getVolume()+"%");
             }
         }else{
-            System.out.println("error");
+            System.out.println("Phone Mati");
         }
- }
+    }
+    public void VolumeDown(){
+        if(isPowerOn){
+            if(this.volume == MinVolume){
+                System.out.println("Volume "+getVolume()+"%");
+            }else{
+                this.volume -=10;
+                System.out.println("Volume "+getVolume()+"%");
+            }
+        }else{
+            System.out.println("Phone Mati");
+        }
+    }  
+}

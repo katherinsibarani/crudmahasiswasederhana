@@ -4,17 +4,77 @@
  */
 package com.katherin.crudkontak.Frame;
 
+import com.katherin.crudkontak.controllers.ControllerKontak;
+import com.katherin.crudkontak.interfaces.interfaceKontak;
+import com.katherin.crudkontak.models.Kontak;
+import java.util.List;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Katherin
  */
 public class FrameKontak extends javax.swing.JFrame {
-
+    List<Kontak> record = new ArrayList<>();
+    interfaceKontak serviceKontak;
+    int row;
     /**
      * Creates new form FrameKontak
      */
     public FrameKontak() {
         initComponents();
+        serviceKontak = new ControllerKontak();
+        this.refershData();
+    }
+    
+     void loadData(){
+        try {
+            record = serviceKontak.getAll();
+        } catch(SQLException exception){
+            Logger.getLogger(FrameKontak.class.getName()).log(Level.SEVERE, null, exception);
+        }
+    }
+    
+    void fillTable(){
+        Object data[][] = new Object[record.size()][4];
+        int i = 0;
+        for (Kontak k:record) {
+            data[i][0] = k.getId();
+            data[i][1] = k.getNama();
+            data[i][2] = k.getTelepon();
+            data[i][3] = k.getAlamat();
+            i++;
+        }
+        String kolom[] = {"ID", "Nama", "Telepon", "Alamat"};
+        tablePhoneBook.setModel(new DefaultTableModel(data, kolom));
+        scrollPaneTabel.setViewportView(tablePhoneBook);
+    }
+    
+    void fillField(){
+        Kontak kontak = record.get(row);
+        labelID.setText(String.valueOf(kontak.getId()));
+        fieldNama.setText(kontak.getNama());
+        fieldTelepon.setText(kontak.getTelepon());
+        textAlamat.setText(kontak.getAlamat());
+    }
+    
+    void cleanField(){
+        fieldNama.setText("");
+        fieldTelepon.setText("");
+        textAlamat.setText("");
+        labelID.setText(null);
+    }
+    
+    void refershData(){
+        cleanField();
+        loadData();
+        fillTable();
     }
 
     /**
@@ -28,47 +88,48 @@ public class FrameKontak extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        labelNama = new javax.swing.JLabel();
+        labelTelepon = new javax.swing.JLabel();
+        labelAlamat = new javax.swing.JLabel();
+        fieldNama = new javax.swing.JTextField();
+        fieldTelepon = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        textAlamat = new javax.swing.JTextArea();
+        scrollPaneTabel = new javax.swing.JScrollPane();
+        tablePhoneBook = new javax.swing.JTable();
+        buttonDelete = new javax.swing.JButton();
+        buttonUpdate = new javax.swing.JButton();
+        buttonAdd = new javax.swing.JButton();
+        buttonRefresh = new javax.swing.JButton();
+        labelID = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("CRUD Buku Telepon");
 
-        jLabel2.setText("Nama:");
+        labelNama.setText("Nama:");
 
-        jLabel3.setText("Telepon:");
+        labelTelepon.setText("Telepon:");
 
-        jLabel4.setText("Alamat:");
+        labelAlamat.setText("Alamat:");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        fieldNama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                fieldNamaActionPerformed(evt);
             }
         });
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        fieldTelepon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                fieldTeleponActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        textAlamat.setColumns(20);
+        textAlamat.setRows(5);
+        jScrollPane1.setViewportView(textAlamat);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablePhoneBook.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -79,20 +140,42 @@ public class FrameKontak extends javax.swing.JFrame {
                 "id", "nama", "telepon", "alamat"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        tablePhoneBook.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablePhoneBookMouseClicked(evt);
+            }
+        });
+        scrollPaneTabel.setViewportView(tablePhoneBook);
 
-        jButton1.setText("Delete");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonDelete.setText("Delete");
+        buttonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonDeleteActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Update");
+        buttonUpdate.setText("Update");
+        buttonUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUpdateActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Add");
+        buttonAdd.setText("Add");
+        buttonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Refresh");
+        buttonRefresh.setText("Refresh");
+        buttonRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRefreshActionPerformed(evt);
+            }
+        });
+
+        labelID.setText("ID");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,29 +189,32 @@ public class FrameKontak extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField2))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(labelTelepon)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(fieldTelepon))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(labelNama)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(fieldNama, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(labelID))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelAlamat)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(scrollPaneTabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jButton1)
+                                        .addComponent(buttonDelete)
                                         .addGap(27, 27, 27)
-                                        .addComponent(jButton2)
+                                        .addComponent(buttonUpdate)
                                         .addGap(37, 37, 37)
-                                        .addComponent(jButton3)
+                                        .addComponent(buttonAdd)
                                         .addGap(35, 35, 35)
-                                        .addComponent(jButton4)))))))
+                                        .addComponent(buttonRefresh)))))))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -138,24 +224,25 @@ public class FrameKontak extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelNama)
+                    .addComponent(fieldNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelID))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelTelepon)
+                    .addComponent(fieldTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
+                    .addComponent(labelAlamat)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPaneTabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(buttonDelete)
+                    .addComponent(buttonUpdate)
+                    .addComponent(buttonAdd)
+                    .addComponent(buttonRefresh))
                 .addContainerGap(251, Short.MAX_VALUE))
         );
 
@@ -175,17 +262,75 @@ public class FrameKontak extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void fieldNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_fieldNamaActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void fieldTeleponActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTeleponActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_fieldTeleponActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        try {
+            String id = labelID.getText();
+            serviceKontak.delete(Integer.parseInt(id));
+            JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus");
+        } catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Data Gagal Dihapus");
+            Logger.getLogger(FrameKontak.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonDeleteActionPerformed
+
+    private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
+        // TODO add your handling code here:
+        try {
+            Kontak kontak = new Kontak();
+            
+		kontak.setNama(fieldNama.getText());
+		kontak.setTelepon(fieldTelepon.getText());
+		kontak.setAlamat(textAlamat.getText());
+            
+            serviceKontak.insert(kontak);
+            JOptionPane.showMessageDialog(this, "Data Tersimpan");
+        } catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Data Gagal Tersimpan");
+            Logger.getLogger(FrameKontak.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonAddActionPerformed
+
+    private void buttonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            Kontak kontak = new Kontak();
+            kontak.setId(Integer.parseInt(labelID.getText()));
+           
+		kontak.setNama(fieldNama.getText());
+		kontak.setTelepon(fieldTelepon.getText());
+		kontak.setAlamat(textAlamat.getText());
+            
+            serviceKontak.update(kontak);
+JOptionPane.showMessageDialog(this, "Data Berhasil Diubah");
+        } catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Data Gagal Diubah");
+             Logger.getLogger(FrameKontak.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonUpdateActionPerformed
+
+    private void buttonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefreshActionPerformed
+        // TODO add your handling code here:
+        this.refershData();
+    }//GEN-LAST:event_buttonRefreshActionPerformed
+
+    private void tablePhoneBookMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePhoneBookMouseClicked
+        // TODO add your handling code here:
+        tablePhoneBook.getSelectionModel().addListSelectionListener((ListSelectionEvent event) -> {
+            row = tablePhoneBook.getSelectedRow();
+            if (row != -1){
+                fillField();
+            }
+        });
+    }//GEN-LAST:event_tablePhoneBookMouseClicked
 
     /**
      * @param args the command line arguments
@@ -215,6 +360,25 @@ public class FrameKontak extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+       try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrameKontak.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+ java.util.logging.Logger.getLogger(FrameKontak.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrameKontak.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrameKontak.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+ }
+        //</editor-fold>
+
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrameKontak().setVisible(true);
@@ -223,20 +387,21 @@ public class FrameKontak extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton buttonAdd;
+    private javax.swing.JButton buttonDelete;
+    private javax.swing.JButton buttonRefresh;
+    private javax.swing.JButton buttonUpdate;
+    private javax.swing.JTextField fieldNama;
+    private javax.swing.JTextField fieldTelepon;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel labelAlamat;
+    private javax.swing.JLabel labelID;
+    private javax.swing.JLabel labelNama;
+    private javax.swing.JLabel labelTelepon;
+    private javax.swing.JScrollPane scrollPaneTabel;
+    private javax.swing.JTable tablePhoneBook;
+    private javax.swing.JTextArea textAlamat;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,12 +12,11 @@
         <exec.mainClass>com.katherin.crudkontak.CRUDKontak</exec.mainClass>
     </properties>
     
-    <dependencies>
-       <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.31</version>
-</dependency>
+   <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.31</version>
+        </dependency>
     </dependencies>
 </project>

@@ -4,7 +4,7 @@
  */
 package com.katherin.crudkontak.Conection;
 
-import com.mysql.cj.xdevapi.Statement;
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

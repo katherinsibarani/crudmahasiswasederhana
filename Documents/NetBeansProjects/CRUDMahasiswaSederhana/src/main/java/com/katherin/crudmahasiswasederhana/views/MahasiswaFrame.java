@@ -32,7 +32,9 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
     public MahasiswaFrame() {
         initComponents();
          mhsServis = new MahasiswaController();
-        
+        nimValidasiLabel.setVisible(false);
+        namaValidasiLabel.setVisible(false);
+        alamatValidasiLabel.setVisible(false);
         
         mahasiswaTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             
@@ -90,6 +92,40 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
         loadData();
         isiTabel();
     }
+    void validasiInput(Mahasiswa o){
+        if(nimText.getText().equals("")){
+            nimValidasiLabel.setText("NIM belum diisi");
+            nimValidasiLabel.setVisible(true);
+        }else if(!nimText.getText().matches("[0-9]*")){
+            nimValidasiLabel.setText("NIM harus berisi angka");
+            nimValidasiLabel.setVisible(true);
+        }else if(nimText.getText().length() < 5){
+            nimValidasiLabel.setText("NIM minimal berisi 5 angka");
+            nimValidasiLabel.setVisible(true);
+        }else if(nimText.getText().length() > 12){
+            nimValidasiLabel.setText("NIM maksimal berisi 12 angka");
+            nimValidasiLabel.setVisible(true);
+        }else{
+            o.setNim(nimText.getText());
+            nimValidasiLabel.setVisible(false);
+        }
+        
+        if(namaText.getText().equals("")){
+            namaValidasiLabel.setText("Nama belum diisi");
+            namaValidasiLabel.setVisible(true);
+        }else{
+            o.setNama(namaText.getText());
+            namaValidasiLabel.setVisible(false);
+        }
+         if(alamatText.getText().equals("")){
+            alamatValidasiLabel.setText("Alamat belum diisi");
+            alamatValidasiLabel.setVisible(true);
+        }else{
+            o.setAlamat(alamatText.getText());
+            alamatValidasiLabel.setVisible(false);
+         }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -112,6 +148,9 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
         hapusBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         mahasiswaTable = new javax.swing.JTable();
+        nimValidasiLabel = new javax.swing.JLabel();
+        namaValidasiLabel = new javax.swing.JLabel();
+        alamatValidasiLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,16 +189,25 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
 
         mahasiswaTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3"
             }
         ));
         jScrollPane1.setViewportView(mahasiswaTable);
+
+        nimValidasiLabel.setForeground(new java.awt.Color(255, 0, 0));
+        nimValidasiLabel.setText("jLabel1");
+
+        namaValidasiLabel.setForeground(new java.awt.Color(255, 0, 0));
+        namaValidasiLabel.setText("jLabel2");
+
+        alamatValidasiLabel.setForeground(new java.awt.Color(255, 0, 0));
+        alamatValidasiLabel.setText("jLabel3");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -177,9 +225,13 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
                             .addComponent(alamatLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nimText)
-                            .addComponent(namaText)
-                            .addComponent(alamatText, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
+                            .addComponent(alamatValidasiLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(nimValidasiLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(nimText, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(alamatText, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(namaText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                                .addComponent(namaValidasiLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tambahBtn)
@@ -195,19 +247,25 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
                     .addComponent(nimLabel)
                     .addComponent(nimText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tambahBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nimValidasiLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(namaLabel)
                     .addComponent(namaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ubahBtn))
-                .addGap(18, 18, 18)
+                .addGap(4, 4, 4)
+                .addComponent(namaValidasiLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(alamatLabel)
                     .addComponent(alamatText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(hapusBtn))
-                .addGap(18, 18, 18)
+                .addGap(2, 2, 2)
+                .addComponent(alamatValidasiLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -232,9 +290,10 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
         try{
           // TODO add your handlings code here
         Mahasiswa mhs = new Mahasiswa();
-        mhs.setNim(nimText.getText());
-        mhs.setNama(namaText.getText());
-        mhs.setAlamat(alamatText.getText());
+        validasiInput(mhs);
+       // mhs.setNim(nimText.getText());
+       // mhs.setNama(namaText.getText());
+      //  mhs.setAlamat(alamatText.getText());
         mhsServis.insert(mhs);
         this.statusAwal();
         JOptionPane.showMessageDialog(this, "data tersimpan"); 
@@ -247,9 +306,10 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
         try{
           // TODO add your handlings code here
         Mahasiswa mhs = new Mahasiswa();
-        mhs.setNim(nimText.getText());
-        mhs.setNama(namaText.getText());
-        mhs.setAlamat(alamatText.getText());
+        validasiInput(mhs);
+        //mhs.setNim(nimText.getText());
+        //mhs.setNama(namaText.getText());
+        //mhs.setAlamat(alamatText.getText());
         mhsServis.update(mhs);
         this.statusAwal();
         JOptionPane.showMessageDialog(this, "data berhasil diubah"); 
@@ -309,14 +369,17 @@ List<Mahasiswa> record=new ArrayList<Mahasiswa>();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel alamatLabel;
     private javax.swing.JTextField alamatText;
+    private javax.swing.JLabel alamatValidasiLabel;
     private javax.swing.JButton hapusBtn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable mahasiswaTable;
     private javax.swing.JLabel namaLabel;
     private javax.swing.JTextField namaText;
+    private javax.swing.JLabel namaValidasiLabel;
     private javax.swing.JLabel nimLabel;
     private javax.swing.JTextField nimText;
+    private javax.swing.JLabel nimValidasiLabel;
     private javax.swing.JButton tambahBtn;
     private javax.swing.JButton ubahBtn;
     // End of variables declaration//GEN-END:variables
